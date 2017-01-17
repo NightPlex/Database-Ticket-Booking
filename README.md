@@ -1,7 +1,6 @@
-# Spring MVC browser game. IllegalMinds
+# Database for booking tickets to Events
 
-Browser game that I have been considering to develope for years. Recently after getting into Spring framework I 
-started to build it from scartch. At this moment project has landing page with register and login. After login the game view, however game functionality not yet added. Project has security implemented and custom security users.
+Database system to hold information about events, artists, bookings, venues. Add any amount of artist which can perform in different events. Booking table for registering bookings
 
 ## Getting Started
 
