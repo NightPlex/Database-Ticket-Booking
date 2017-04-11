@@ -1,0 +1,49 @@
+CREATE TABLE Account (
+	
+	account_number VARCHAR(12) NOT NULL PRIMARY KEY,
+	balance DECIMAL(11,2) NOT NULL
+
+)
+
+CREATE TABLE History (
+	
+	row_id INT IDENTITY,
+	account_number VARCHAR(12) NOT NULL PRIMARY KEY,
+	modification_date DATE NOT NULL,
+	modification_time TIME NOT NULL,
+	username VARCHAR(50) NOT NULL,
+	modification_type VARCHAR(15) NOT NULL CHECK (modification_type IN('INSERT', 'UPDATE', 'DELETE')),
+	old_value DECIMAL(11,2),
+	new_value DECIMAL(11,2),
+
+)
+
+
+CREATE TRIGGER Account_Insert_Trigger ON Account
+AFTER INSERT
+AS 
+BEGIN
+	DECLARE @account_number VARCHAR(12)
+	DECLARE @balance DECIMAL(11,2) 
+	DECLARE @username VARCHAR(45)
+	 
+	SELECT @username = master.dbo.sysprocesses.spid
+	FROM master.dbo.sysprocesses
+	WHERE spid = @@spid
+
+	SELECT @account_number = Account.account_number
+	FROM Account
+
+	SELECT @balance = Account.balance
+	FROM Account
+
+	INSERT INTO History (account_number, modification_date, modification_time, username, 
+	modification_type, old_value, new_value)
+	VALUES (@account_number, CONVERT(date, getdate()), CONVERT(time, getdate()),
+	@username, 'INSERT', NULL, NULL)
+END	
+
+
+INSERT INTO Account (account_number, balance)
+values(123, 345)
+	
